@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_CENTER" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apis.weather.WeatherController">
+   <children>
+      <HBox>
+         <children>
+            <Button fx:id="btn_ham" mnemonicParsing="false" onAction="#settings" style="-fx-background-color: transparent;">
+               <graphic>
+                  <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../img/gui/ham_button.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Label fx:id="label_city" text="Emden" textFill="WHITE" />
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
+      <HBox>
+         <children>
+            <ImageView fitHeight="112.5" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../img/weather/Weather+Targeting.png" />
+               </image>
+               <HBox.margin>
+                  <Insets bottom="-15.0" right="-5.0" top="-15.0" />
+               </HBox.margin>
+            </ImageView>
+            <VBox>
+               <children>
+                  <Label fx:id="label_temp" text="24°C" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="36.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="-15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="label_temp_min" text="min 18" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="label_temp_max" text="max 28" textFill="WHITE">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <HBox />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox spacing="10.0">
+         <children>
+            <Label text="Wind:" textFill="WHITE">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="label_wind" text="100 kmH" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets bottom="-5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
+      <Label fx:id="label_wind_inwords" text="mäßiger Wind" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+   </children>
+</VBox>
