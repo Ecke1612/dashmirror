@@ -19,6 +19,7 @@
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#addWeather" text="Wetter" />
                 <MenuItem mnemonicParsing="false" text="Deutsche Bahn" />
+                  <MenuItem mnemonicParsing="false" onAction="#addGoogleCalendar" text="Google Kalendar" />
               </items>
             </MenuButton>
          </children>

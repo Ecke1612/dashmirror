@@ -12,8 +12,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.Scanner;
-
 public class WeatherController {
 
     @FXML
@@ -34,7 +32,6 @@ public class WeatherController {
     private Stage settingStage;
 
     public void initialize() {
-
         weatherAPI = new Weather(city);
         if(weatherAPI.checkCurrentWeather()) {
             label_city.setText(city);
