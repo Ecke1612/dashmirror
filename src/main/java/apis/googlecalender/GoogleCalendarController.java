@@ -2,13 +2,17 @@ package apis.googlecalender;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -30,17 +34,34 @@ public class GoogleCalendarController {
     public Label label_head;
     @FXML
     public Label label_head_date;
+    @FXML
+    public ScrollPane scrollpane;
 
     private GoogleCalendar gCal;
     private String name = "Eike";
     private int maxResult = 5;
+    private Timeline timeline;
+    private int updateCicle = 5;
+
+    public GoogleCalendarController() {
+        timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+
+        KeyFrame frame = new KeyFrame(Duration.minutes(updateCicle), event -> {
+            initialize();
+        });
+        timeline.getKeyFrames().add(frame);
+        timeline.play();
+    }
 
     public void initialize() {
+        vbox_main.getChildren().clear();
         label_head.setText(name + "'s Google Calender");
         label_head_date.setText(getActualDate());
         gCal = new GoogleCalendar();
         try {
             List<Event> items = gCal.getCalendarData(maxResult);
+            System.out.println("size: " + items.size());
             if (items.isEmpty()) {
                 System.out.println("No upcoming events found.");
             } else {
@@ -75,13 +96,25 @@ public class GoogleCalendarController {
         Label label_weekday = new Label((date.getDayOfWeek().toString().substring(0,3)));
         Label label_subject = new Label(subject);
 
-        int rangeInMinutes = (getTimeRange(start).getHour() * 60) + getTimeRange(start).getMinute();
-        LocalTime timeRange = date.toLocalTime().plus(rangeInMinutes, ChronoUnit.MINUTES);
+        LocalTime range = getTimeRange(start);
+        Label label_timeRange;
+        if(range == null) {
+            String optZeroM = "";
+            String optZeroH = "";
+            if(date.getMinute() < 10) optZeroM = "0";
+            if(date.getHour() < 10) optZeroH = "0";
+            label_timeRange = new Label(optZeroH + String.valueOf(date.getHour()) + ":" + optZeroM + String.valueOf(date.getMinute()));
+        } else {
+            int rangeInMinutes = (getTimeRange(start).getHour() * 60) + getTimeRange(start).getMinute();
+            LocalTime timeRange = date.toLocalTime().plus(rangeInMinutes, ChronoUnit.MINUTES);
 
-        String optZero = "";
-        if(date.getMinute() < 10) optZero = "0";
-        Label label_timeRange = new Label(String.valueOf(date.getHour()) + ":" + optZero + String.valueOf(date.getMinute())
-                + " - " +timeRange.getHour() + ":" + optZero + timeRange.getMinute());
+            String optZeroM = "";
+            String optZeroH = "";
+            if(date.getHour() < 10) optZeroH = "0";
+            if (date.getMinute() < 10) optZeroM = "0";
+            label_timeRange = new Label(optZeroH + String.valueOf(date.getHour()) + ":" + optZeroM + String.valueOf(date.getMinute())
+                    + " - " + timeRange.getHour() + ":" + optZeroM + timeRange.getMinute());
+        }
 
         styeLabel(label_date,true,15);
         styeLabel(label_weekday, false,12);
@@ -102,10 +135,15 @@ public class GoogleCalendarController {
     }
 
     private LocalTime getTimeRange(DateTime start) {
-        String range = (start.toString()).substring(start.toString().lastIndexOf("+")+1);
-        LocalTime timeRange = LocalTime.parse(range);
 
-        return timeRange;
+        try {
+            String range = (start.toString()).substring(start.toString().lastIndexOf("+") + 1);
+            LocalTime timeRange = LocalTime.parse(range);
+            return timeRange;
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     public static LocalDateTime toLocalDateTime(Calendar calendar) {
@@ -130,6 +168,10 @@ public class GoogleCalendarController {
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         Date date = new Date();
         return dateFormat.format(date);
+    }
+
+    public void openSettings() {
+        System.out.println("Einstellungen");
     }
 
 }

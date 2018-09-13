@@ -1,5 +1,7 @@
 package apis.weather;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -8,12 +10,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import main.Controller;
+
+import java.awt.*;
 
 public class WeatherController {
 
+    @FXML
+    VBox main_pane;
     @FXML
     Label label_temp;
     @FXML
@@ -30,6 +39,19 @@ public class WeatherController {
     private Weather weatherAPI;
     private String city = "London";
     private Stage settingStage;
+    private Timeline timeline;
+    private int updateCicle = 10;
+
+    public WeatherController() {
+        timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+
+        KeyFrame frame = new KeyFrame(Duration.minutes(updateCicle), event -> {
+            initialize();
+        });
+        timeline.getKeyFrames().add(frame);
+        timeline.play();
+    }
 
     public void initialize() {
         weatherAPI = new Weather(city);
