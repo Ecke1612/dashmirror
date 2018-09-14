@@ -57,6 +57,18 @@ public class Controller {
         }
     }
 
+    public void addClock() {
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/fxml/api/clock.fxml"));
+            root = positioning(root);
+            onDrag(root);
+            anchorpane.getChildren().add(root);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private Parent positioning(Parent root) {
         root.setLayoutX((anchorpane.getWidth() / 2) - (root.getLayoutBounds().getWidth()));
         root.setLayoutY(anchorpane.getHeight() / 2 - (root.getLayoutBounds().getHeight()));

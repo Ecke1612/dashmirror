@@ -16,6 +16,7 @@
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#addWeather" text="Wetter" />
                   <MenuItem mnemonicParsing="false" onAction="#addGoogleCalendar" text="Google Kalendar" />
+                  <MenuItem mnemonicParsing="false" onAction="#addClock" text="Uhr" />
               </items>
                <graphic>
                   <ImageView fitHeight="30.0" fitWidth="30.0">

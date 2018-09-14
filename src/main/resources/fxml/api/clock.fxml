@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="main_hbox" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apis.clock.ClockController">
+   <children>
+      <Label fx:id="label_hours" text="15" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="60.0" />
+         </font>
+      </Label>
+      <Label text=":" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="60.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_minutes" text="30" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="60.0" />
+         </font>
+      </Label>
+      <Label fx:id="label_seconds" text="17" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="28.0" />
+         </font>
+      </Label>
+   </children>
+</HBox>
