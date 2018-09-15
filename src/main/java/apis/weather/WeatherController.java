@@ -1,5 +1,6 @@
 package apis.weather;
 
+import data_structure.FileHandler;
 import data_structure.Vec2;
 import data_structure.storage.StoreWeather;
 import javafx.animation.KeyFrame;
@@ -99,6 +100,7 @@ public class WeatherController {
             public void handle(ActionEvent event) {
               city = city_textField.getText();
               initialize();
+              FileHandler.saveData();
               settingStage.close();
             }
         });

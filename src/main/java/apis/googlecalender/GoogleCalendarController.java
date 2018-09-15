@@ -2,6 +2,7 @@ package apis.googlecalender;
 
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
+import data_structure.FileHandler;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -174,6 +175,7 @@ public class GoogleCalendarController {
 
     public void openSettings() {
         System.out.println("Einstellungen");
+        FileHandler.saveData();
     }
 
     public void setName(String name) {

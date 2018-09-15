@@ -12,13 +12,12 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.util.ArrayList;
 
 public class DashmirrorMain extends Application {
 
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
-    private int build = 109;
+    private int build = 111;
     private double externalBuilt = (double)build / 100;
     private String appName = "Dashmirror";
 

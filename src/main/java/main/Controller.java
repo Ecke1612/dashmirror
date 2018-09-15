@@ -17,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -201,9 +202,9 @@ public class Controller {
             public void handle(MouseEvent event) {
 
                 dragging = false;
+                FileHandler.saveData();
             }
         });
-
     }
 }
 
