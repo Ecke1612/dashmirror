@@ -1,6 +1,8 @@
 package data_structure;
 
-public class Vec2 {
+import java.io.Serializable;
+
+public class Vec2 implements Serializable {
 
     private int xi;
     private int yi;

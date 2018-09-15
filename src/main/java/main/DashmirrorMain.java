@@ -1,10 +1,18 @@
 package main;
 
+import apis.weather.WeatherController;
+import data_structure.FileHandler;
+import data_structure.Vec2;
+import data_structure.storage.StorageObject;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
+import java.util.ArrayList;
 
 public class DashmirrorMain extends Application {
 
@@ -22,7 +30,13 @@ public class DashmirrorMain extends Application {
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
         primaryStage.show();
 
-        App app = new App();
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                System.out.println("Auf Wiedersehen");
+               FileHandler.saveData();
+            }
+        });
     }
 
     public int getBuild() {

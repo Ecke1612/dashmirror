@@ -5,6 +5,7 @@ import com.google.api.services.calendar.model.Event;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
@@ -42,6 +43,7 @@ public class GoogleCalendarController {
     private int maxResult = 5;
     private Timeline timeline;
     private int updateCicle = 5;
+    private Parent root;
 
     public GoogleCalendarController() {
         timeline = new Timeline();
@@ -174,4 +176,35 @@ public class GoogleCalendarController {
         System.out.println("Einstellungen");
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMaxResult(int maxResult) {
+        this.maxResult = maxResult;
+    }
+
+    public void setUpdateCicle(int updateCicle) {
+        this.updateCicle = updateCicle;
+    }
+
+    public Parent getRoot() {
+        return root;
+    }
+
+    public void setRoot(Parent root) {
+        this.root = root;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getMaxResult() {
+        return maxResult;
+    }
+
+    public int getUpdateCicle() {
+        return updateCicle;
+    }
 }
