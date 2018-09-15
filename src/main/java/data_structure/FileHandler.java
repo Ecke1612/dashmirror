@@ -121,7 +121,8 @@ public class FileHandler {
     }
 
     public static void saveData() {
-        System.out.println("close");
+        System.out.println("save");
+        if(!fileExist("data")) createDir("data");
         ArrayList<WeatherController> wList = Controller.dataCollector.getWeatherControllers();
         ArrayList<GoogleCalendarController> gList = Controller.dataCollector.getGoogleCalendarControllers();
         ArrayList<ClockController> cList = Controller.dataCollector.getClockControllers();

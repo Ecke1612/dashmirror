@@ -48,20 +48,6 @@ public class ClockController {
 
     }
 
-    private void update() {
-        LocalTime t = LocalTime.now();
-        String optZeroH = "";
-        String optZeroM = "";
-        String optZeroS = "";
-        if(t.getHour() < 10) optZeroH = "0";
-        if(t.getMinute() < 10) optZeroM = "0";
-        if(t.getSecond() < 10) optZeroS = "0";
-
-        label_hours.setText(optZeroH + String.valueOf(t.getHour()));
-        label_minutes.setText(optZeroM + String.valueOf(t.getMinute()));
-        label_seconds.setText(optZeroS + String.valueOf(t.getSecond()));
-    }
-
     public Parent getRoot() {
         return root;
     }
