@@ -2,10 +2,9 @@ package main;
 
 import apis.clock.ClockController;
 import apis.googlecalender.GoogleCalendarController;
-import apis.weather.Weather;
 import apis.weather.WeatherController;
-import data_structure.DataCollector;
 import data_structure.FileHandler;
+import data_structure.ParentCollectorObject;
 import data_structure.storage.StorageObject;
 import data_structure.storage.StoreClock;
 import data_structure.storage.StoreGCalendar;
@@ -17,7 +16,6 @@ import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -34,9 +32,8 @@ public class Controller {
     //private Node view;
     private boolean dragging = false;
 
-    private ArrayList<Parent> parentlist = new ArrayList<>();
-    public static DataCollector dataCollector = new DataCollector();
     public static StorageObject storageObject = new StorageObject();
+    public static ArrayList<ParentCollectorObject> parentCollectorObjects = new ArrayList<>();
 
 
     public void initialize() throws IOException {
@@ -47,84 +44,70 @@ public class Controller {
     }
 
     public void addWeather() {
-        Parent root = null;
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/api/weather.fxml"));
-            root = fxmlLoader.load();
-            WeatherController weatherController = fxmlLoader.getController();
-            root = positioning(root);
-            onDrag(root);
-            anchorpane.getChildren().add(root);
-            weatherController.setRoot(root);
-            dataCollector.addWeatherController(weatherController);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        addWidet("weather", "/fxml/api/weather.fxml");
     }
 
     public void addGoogleCalendar() {
-        Parent root = null;
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/api/googleCalendar.fxml"));
-            root = fxmlLoader.load();
-            GoogleCalendarController googleCalendarController = fxmlLoader.getController();
-            root = positioning(root);
-            onDrag(root);
-            anchorpane.getChildren().add(root);
-            googleCalendarController.setRoot(root);
-            dataCollector.addGoogleCalendarController(googleCalendarController);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        addWidet("gCalendar", "/fxml/api/googleCalendar.fxml");
     }
 
     public void addClock() {
+        addWidet("clock", "/fxml/api/clock.fxml");
+    }
+
+    public void addWidet(String type, String path) {
         Parent root = null;
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/api/clock.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(path));
             root = fxmlLoader.load();
-            ClockController clockController = fxmlLoader.getController();
             root = positioning(root);
             onDrag(root);
             anchorpane.getChildren().add(root);
-            clockController.setRoot(root);
-            dataCollector.addClockController(clockController);
+            switch(type) {
+                case "weather":
+                    WeatherController weatherController = fxmlLoader.getController();
+                    weatherController.setMainController(this);
+                    parentCollectorObjects.add(new ParentCollectorObject(parentCollectorObjects.size(), root, weatherController));
+                    break;
+                case "gCalendar":
+                    GoogleCalendarController googleCalendarController = fxmlLoader.getController();
+                    googleCalendarController.setController(this);
+                    parentCollectorObjects.add(new ParentCollectorObject(parentCollectorObjects.size(), root, googleCalendarController));
+                    break;
+                case "clock":
+                    ClockController clockController = fxmlLoader.getController();
+                    clockController.setController(this);
+                    parentCollectorObjects.add(new ParentCollectorObject(parentCollectorObjects.size(), root, clockController));
+                    break;
+            }
         }catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void loadStoredData() throws IOException {
-        //------------WEATHER-------------------------------------------------------------------------------------------
+
+    public void loadStoredData() throws IOException {
         for(StoreWeather w : storageObject.getStoreWeathers()) {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/api/weather.fxml"));
             Parent rootW = fxmlLoader.load();
             WeatherController wCTR = fxmlLoader.getController();
-            wCTR.setCity(w.getCity());
-            wCTR.setUpdateCircle(w.getUpdateCircle());
-            rootW.setLayoutX(w.getPos().getXd());
-            rootW.setLayoutY(w.getPos().getYd());
-            wCTR.setRoot(rootW);
+            wCTR.setMainController(this);
+            parentCollectorObjects.add(new ParentCollectorObject(parentCollectorObjects.size(), rootW, wCTR));
+            parentCollectorObjects.get(parentCollectorObjects.size() - 1).restoreWeatherData(w);
             wCTR.initialize();
-            dataCollector.addWeatherController(wCTR);
             onDrag(rootW);
             anchorpane.getChildren().add(rootW);
+
         }
         //--------------------------------------------------------------------------------------------------------------
         //------------GoogleCalendar------------------------------------------------------------------------------------
         for(StoreGCalendar g : storageObject.getStoreGCalendars()) {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/api/googleCalendar.fxml"));
             Parent rootG = fxmlLoader.load();
-            GoogleCalendarController gCTR = fxmlLoader.getController();;
-            gCTR.setName(g.getName());
-            gCTR.setMaxResult(g.getMaxResult());
-            gCTR.setUpdateCicle(g.getUpdateCicle());
-            rootG.setLayoutX(g.getPos().getXd());
-            rootG.setLayoutY(g.getPos().getYd());
-            gCTR.setRoot(rootG);
-            gCTR.initialize();
-            dataCollector.addGoogleCalendarController(gCTR);
+            GoogleCalendarController gCTR = fxmlLoader.getController();
+            gCTR.setController(this);
+            parentCollectorObjects.add(new ParentCollectorObject(parentCollectorObjects.size(), rootG, gCTR));
+            parentCollectorObjects.get(parentCollectorObjects.size() - 1).restoreGCalendarData(g);
             onDrag(rootG);
             anchorpane.getChildren().add(rootG);
         }
@@ -134,10 +117,9 @@ public class Controller {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/api/clock.fxml"));
             Parent rootC = fxmlLoader.load();
             ClockController cCTR = fxmlLoader.getController();
-            rootC.setLayoutX(c.getPos().getXd());
-            rootC.setLayoutY(c.getPos().getYd());
-            cCTR.setRoot(rootC);
-            dataCollector.addClockController(cCTR);
+            cCTR.setController(this);
+            parentCollectorObjects.add(new ParentCollectorObject(parentCollectorObjects.size(), rootC, cCTR));
+            parentCollectorObjects.get(parentCollectorObjects.size() - 1).restoreClockData(c);
             onDrag(rootC);
             anchorpane.getChildren().add(rootC);
         }
@@ -148,9 +130,8 @@ public class Controller {
     }
 
     private Parent positioning(Parent root) {
-        root.setLayoutX((anchorpane.getWidth() / 2) - (root.getLayoutBounds().getWidth()));
-        root.setLayoutY(anchorpane.getHeight() / 2 - (root.getLayoutBounds().getHeight()));
-        parentlist.add(root);
+        root.setLayoutX((anchorpane.getWidth() / 4) - (root.getLayoutBounds().getWidth()));
+        root.setLayoutY(anchorpane.getHeight() / 4 - (root.getLayoutBounds().getHeight()));
         return root;
     }
 

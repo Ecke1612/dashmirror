@@ -15,12 +15,24 @@ public class StorageObject implements Serializable {
         storeWeathers.add(new StoreWeather(city, updateCircle, pos));
     }
 
+    public void addStoreWeathersObject(StoreWeather s) {
+        storeWeathers.add(s);
+    }
+
     public void addStoreGCalendar(String name, int maxResults, int updateCircle, Vec2 pos) {
         storeGCalendars.add(new StoreGCalendar(name, maxResults, updateCircle, pos));
     }
 
+    public void addStoreGCalendarObject(StoreGCalendar g) {
+        storeGCalendars.add(g);
+    }
+
     public void addStoreClock(Vec2 pos) {
         storeClocks.add(new StoreClock(pos));
+    }
+
+    public void addStoreClockObject(StoreClock c) {
+        storeClocks.add(c);
     }
 
     public ArrayList<StoreClock> getStoreClocks() {
@@ -33,5 +45,11 @@ public class StorageObject implements Serializable {
 
     public ArrayList<StoreWeather> getStoreWeathers() {
         return storeWeathers;
+    }
+
+    public void clearStoragedData() {
+        storeWeathers.clear();
+        storeGCalendars.clear();
+        storeClocks.clear();
     }
 }

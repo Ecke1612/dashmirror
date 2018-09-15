@@ -1,9 +1,6 @@
 package main;
 
-import apis.weather.WeatherController;
 import data_structure.FileHandler;
-import data_structure.Vec2;
-import data_structure.storage.StorageObject;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +14,7 @@ public class DashmirrorMain extends Application {
 
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
-    private int build = 111;
+    private int build = 112;
     private double externalBuilt = (double)build / 100;
     private String appName = "Dashmirror";
 
@@ -33,7 +30,7 @@ public class DashmirrorMain extends Application {
             @Override
             public void handle(WindowEvent event) {
                 System.out.println("Auf Wiedersehen");
-               FileHandler.saveData();
+                FileHandler.saveData();
             }
         });
     }

@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import main.Controller;
 
 public class WeatherController {
 
@@ -41,14 +42,14 @@ public class WeatherController {
     private Stage settingStage;
     private Timeline timeline;
     private int updateCircle = 10;
-    private StoreWeather storeWeather;
-    private Vec2 pos = new Vec2(0,0);
-    private Parent root;
+    private Controller mainController;
+    private int index;
+    private boolean delete = false;
+
 
     public WeatherController() {
         timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
-        storeWeather = new StoreWeather(city, updateCircle, pos);
         KeyFrame frame = new KeyFrame(Duration.minutes(updateCircle), event -> {
             initialize();
         });
@@ -68,6 +69,13 @@ public class WeatherController {
         }else {
             System.out.println("City not found");
         }
+    }
+
+    public void delete() {
+        System.out.println("delete");
+        mainController.anchorpane.getChildren().remove(Controller.parentCollectorObjects.get(index).getParent());
+        Controller.parentCollectorObjects.get(index).setDeleted(true);
+        FileHandler.saveData();
     }
 
     public void settings() {
@@ -116,23 +124,31 @@ public class WeatherController {
         return updateCircle;
     }
 
-    public void setPos(Vec2 pos) {
-        this.pos = pos;
-    }
-
-    public Parent getRoot() {
-        return root;
-    }
-
-    public void setRoot(Parent root) {
-        this.root = root;
-    }
-
     public void setCity(String city) {
         this.city = city;
     }
 
     public void setUpdateCircle(int updateCircle) {
         this.updateCircle = updateCircle;
+    }
+
+    public void setMainController(Controller mainController) {
+        this.mainController = mainController;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
     }
 }

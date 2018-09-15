@@ -3,6 +3,7 @@ package apis.googlecalender;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import data_structure.FileHandler;
+import data_structure.ParentCollectorObject;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
+import main.Controller;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -45,6 +47,8 @@ public class GoogleCalendarController {
     private Timeline timeline;
     private int updateCicle = 5;
     private Parent root;
+    private Controller controller;
+    private int index;
 
     public GoogleCalendarController() {
         timeline = new Timeline();
@@ -84,6 +88,12 @@ public class GoogleCalendarController {
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
         }
+    }
+
+    public void delete() {
+        controller.anchorpane.getChildren().remove(Controller.parentCollectorObjects.get(index).getParent());
+        Controller.parentCollectorObjects.get(index).setDeleted(true);
+        FileHandler.saveData();
     }
 
     private void createDateRow(String subject, DateTime start) {
@@ -208,5 +218,13 @@ public class GoogleCalendarController {
 
     public int getUpdateCicle() {
         return updateCicle;
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

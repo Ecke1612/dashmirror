@@ -1,10 +1,12 @@
 package apis.clock;
 
+import data_structure.FileHandler;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import main.Controller;
 
 import java.time.LocalTime;
 
@@ -18,7 +20,9 @@ public class ClockController {
     Label label_seconds;
 
     private Timeline timeline;
-    private Parent root;
+    private Controller controller;
+    private int index;
+    private boolean delete = false;
 
     public ClockController() {
         timeline = new Timeline();
@@ -44,17 +48,33 @@ public class ClockController {
         label_seconds.setText(optZeroS + String.valueOf(t.getSecond()));
     }
 
-    public void clockStart() {
-
+    public void delete() {
+        controller.anchorpane.getChildren().remove(Controller.parentCollectorObjects.get(index).getParent());
+        Controller.parentCollectorObjects.get(index).setDeleted(true);
+        FileHandler.saveData();
     }
 
-    public Parent getRoot() {
-        return root;
+    public void settings() {
+        System.out.println("settings");
     }
 
-    public void setRoot(Parent root) {
-        this.root = root;
+    public int getIndex() {
+        return index;
     }
 
+    public void setIndex(int index) {
+        this.index = index;
+    }
 
+    public boolean isDelete() {
+        return delete;
+    }
+
+    public void setDelete(boolean delete) {
+        this.delete = delete;
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
 }

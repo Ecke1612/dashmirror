@@ -1,8 +1,5 @@
 package data_structure;
 
-import apis.clock.ClockController;
-import apis.googlecalender.GoogleCalendarController;
-import apis.weather.WeatherController;
 import main.Controller;
 
 import java.io.*;
@@ -123,22 +120,21 @@ public class FileHandler {
     public static void saveData() {
         System.out.println("save");
         if(!fileExist("data")) createDir("data");
-        ArrayList<WeatherController> wList = Controller.dataCollector.getWeatherControllers();
-        ArrayList<GoogleCalendarController> gList = Controller.dataCollector.getGoogleCalendarControllers();
-        ArrayList<ClockController> cList = Controller.dataCollector.getClockControllers();
 
-        Controller.storageObject.getStoreWeathers().clear();
-        Controller.storageObject.getStoreGCalendars().clear();
-        Controller.storageObject.getStoreClocks().clear();
+        Controller.storageObject.clearStoragedData();
 
-        for(WeatherController w : wList) {
-            Controller.storageObject.addStoreWeathers(w.getCity(), w.getUpdateCircle(), new Vec2(w.getRoot().getLayoutX(), w.getRoot().getLayoutY()));
-        }
-        for(GoogleCalendarController g : gList) {
-            Controller.storageObject.addStoreGCalendar(g.getName(), g.getMaxResult(), g.getUpdateCicle(), new Vec2(g.getRoot().getLayoutX(), g.getRoot().getLayoutY()));
-        }
-        for(ClockController c : cList) {
-            Controller.storageObject.addStoreClock(new Vec2(c.getRoot().getLayoutX(), c.getRoot().getLayoutY()));
+        for(ParentCollectorObject p : Controller.parentCollectorObjects) {
+            switch(p.getType()) {
+                case "weather":
+                    if(!p.isDeleted()) Controller.storageObject.addStoreWeathersObject(p.getStoreWeather());
+                    break;
+                case "googleCalendar":
+                    if(!p.isDeleted()) Controller.storageObject.addStoreGCalendarObject(p.getStoreGCalendar());
+                    break;
+                case "clock":
+                    if(!p.isDeleted()) Controller.storageObject.addStoreClockObject(p.getStoreClock());
+                    break;
+            }
         }
         FileHandler.writeObject(Controller.storageObject, "data/storage");
     }
