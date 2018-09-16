@@ -41,7 +41,7 @@ public class WeatherController {
     private String city = "London";
     private Stage settingStage;
     private Timeline timeline;
-    private int updateCircle = 10;
+    private int updateCircle = 15;
     private Controller mainController;
     private int index;
     private boolean delete = false;
@@ -51,6 +51,8 @@ public class WeatherController {
         timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
         KeyFrame frame = new KeyFrame(Duration.minutes(updateCircle), event -> {
+            System.out.println("Weater Updatet - index: " + index);
+            System.out.println();
             initialize();
         });
         timeline.getKeyFrames().add(frame);

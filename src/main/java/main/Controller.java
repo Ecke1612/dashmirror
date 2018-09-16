@@ -1,6 +1,8 @@
 package main;
 
 import apis.clock.ClockController;
+import apis.google_news.GoogleNews;
+import apis.google_news.GoogleNewsController;
 import apis.googlecalender.GoogleCalendarController;
 import apis.weather.WeatherController;
 import data_structure.FileHandler;
@@ -38,8 +40,12 @@ public class Controller {
 
     public void initialize() throws IOException {
         if(FileHandler.fileExist("data/storage")) {
-            storageObject = (StorageObject) FileHandler.loadObjects("data/storage");
-            loadStoredData();
+            try {
+                storageObject = (StorageObject) FileHandler.loadObjects("data/storage");
+                loadStoredData();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -53,6 +59,11 @@ public class Controller {
 
     public void addClock() {
         addWidet("clock", "/fxml/api/clock.fxml");
+    }
+
+    public void addGoogleNachrichten() {
+        GoogleNews gNews = new GoogleNews();
+        gNews.getNews();
     }
 
     public void addWidet(String type, String path) {
@@ -127,6 +138,10 @@ public class Controller {
         //------------???????-------------------------------------------------------------------------------------------
 
         //--------------------------------------------------------------------------------------------------------------
+    }
+
+    public void fullscreen() {
+        DashmirrorMain.primaryStage.setFullScreen(true);
     }
 
     private Parent positioning(Parent root) {

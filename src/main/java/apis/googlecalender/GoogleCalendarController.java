@@ -55,6 +55,8 @@ public class GoogleCalendarController {
         timeline.setCycleCount(Timeline.INDEFINITE);
 
         KeyFrame frame = new KeyFrame(Duration.minutes(updateCicle), event -> {
+            System.out.println("Calendar updatet - index" + index);
+            System.out.println();
             initialize();
         });
         timeline.getKeyFrames().add(frame);
@@ -68,20 +70,24 @@ public class GoogleCalendarController {
         gCal = new GoogleCalendar();
         try {
             List<Event> items = gCal.getCalendarData(maxResult);
-            System.out.println("size: " + items.size());
-            if (items.isEmpty()) {
-                System.out.println("No upcoming events found.");
-            } else {
-                System.out.println("Upcoming events");
-                for (Event event : items) {
-                    DateTime start = event.getStart().getDateTime();
-                    if (start == null) {
-                        start = event.getStart().getDate();
+            if(items != null) {
+                System.out.println("size: " + items.size());
+                if (items.isEmpty()) {
+                    System.out.println("No upcoming events found.");
+                } else {
+                    System.out.println("Upcoming events");
+                    for (Event event : items) {
+                        DateTime start = event.getStart().getDateTime();
+                        if (start == null) {
+                            start = event.getStart().getDate();
+                        }
+                        System.out.printf("%s (%s)\n", event.getSummary(), start);
+                        //System.out.printf(event.getSummary(), start);
+                        createDateRow(event.getSummary(), start);
                     }
-                    System.out.printf("%s (%s)\n", event.getSummary(), start);
-                    //System.out.printf(event.getSummary(), start);
-                    createDateRow(event.getSummary(), start);
                 }
+            } else {
+                System.out.println("no data arrived");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -148,7 +154,6 @@ public class GoogleCalendarController {
     }
 
     private LocalTime getTimeRange(DateTime start) {
-
         try {
             String range = (start.toString()).substring(start.toString().lastIndexOf("+") + 1);
             LocalTime timeRange = LocalTime.parse(range);

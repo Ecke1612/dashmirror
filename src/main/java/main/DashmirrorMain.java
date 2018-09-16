@@ -14,16 +14,18 @@ public class DashmirrorMain extends Application {
 
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
-    private int build = 112;
+    private int build = 116;
     private double externalBuilt = (double)build / 100;
     private String appName = "Dashmirror";
+    public static Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
         primaryStage.setTitle(appName + " - build " + externalBuilt);
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
+        primaryStage.setFullScreen(true);
+        DashmirrorMain.primaryStage = primaryStage;
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -33,18 +35,6 @@ public class DashmirrorMain extends Application {
                 FileHandler.saveData();
             }
         });
-    }
-
-    public int getBuild() {
-        return build;
-    }
-
-    public String getAppName() {
-        return appName;
-    }
-
-    public void terminate() {
-        System.exit(0);
     }
 
     public static void main(String[] args) {
