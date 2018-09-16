@@ -7,10 +7,7 @@ import apis.googlecalender.GoogleCalendarController;
 import apis.weather.WeatherController;
 import data_structure.FileHandler;
 import data_structure.ParentCollectorObject;
-import data_structure.storage.StorageObject;
-import data_structure.storage.StoreClock;
-import data_structure.storage.StoreGCalendar;
-import data_structure.storage.StoreWeather;
+import data_structure.storage.*;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -62,8 +59,7 @@ public class Controller {
     }
 
     public void addGoogleNachrichten() {
-        GoogleNews gNews = new GoogleNews();
-        gNews.getNews();
+        addWidet("gnews", "/fxml/api/googleNews.fxml");
     }
 
     public void addWidet(String type, String path) {
@@ -89,6 +85,11 @@ public class Controller {
                     ClockController clockController = fxmlLoader.getController();
                     clockController.setController(this);
                     parentCollectorObjects.add(new ParentCollectorObject(parentCollectorObjects.size(), root, clockController));
+                    break;
+                case "gnews":
+                    GoogleNewsController googleNewsController = fxmlLoader.getController();
+                    googleNewsController.setController(this);
+                    parentCollectorObjects.add(new ParentCollectorObject(parentCollectorObjects.size(), root, googleNewsController));
                     break;
             }
         }catch (IOException e) {
@@ -134,6 +135,20 @@ public class Controller {
             onDrag(rootC);
             anchorpane.getChildren().add(rootC);
         }
+        //--------------------------------------------------------------------------------------------------------------
+        //------------GNews---------------------------------------------------------------------------------------------
+        for(StoreGNews gn : storageObject.getStoreGNews()) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/api/googleNews.fxml"));
+            Parent rootGN = fxmlLoader.load();
+            GoogleNewsController gnCTR = fxmlLoader.getController();
+            gnCTR.setController(this);
+            parentCollectorObjects.add(new ParentCollectorObject(parentCollectorObjects.size(), rootGN, gnCTR));
+            parentCollectorObjects.get(parentCollectorObjects.size() - 1).restoreGNewsData(gn);
+            onDrag(rootGN);
+            anchorpane.getChildren().add(rootGN);
+        }
+        //--------------------------------------------------------------------------------------------------------------
+
         //--------------------------------------------------------------------------------------------------------------
         //------------???????-------------------------------------------------------------------------------------------
 

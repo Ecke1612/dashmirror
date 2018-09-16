@@ -1,10 +1,12 @@
 package data_structure;
 
 import apis.clock.ClockController;
+import apis.google_news.GoogleNewsController;
 import apis.googlecalender.GoogleCalendarController;
 import apis.weather.WeatherController;
 import data_structure.storage.StoreClock;
 import data_structure.storage.StoreGCalendar;
+import data_structure.storage.StoreGNews;
 import data_structure.storage.StoreWeather;
 import javafx.scene.Parent;
 
@@ -16,6 +18,8 @@ public class ParentCollectorObject {
     private WeatherController weatherController;
     private GoogleCalendarController googleCalendarController;
     private ClockController clockController;
+    private GoogleNewsController googleNewsController;
+
     private String type;
     private boolean deleted = false;
 
@@ -43,6 +47,16 @@ public class ParentCollectorObject {
         type = "clock";
     }
 
+    public ParentCollectorObject(int index, Parent parent, GoogleNewsController googleNewsController) {
+        this.index = index;
+        this.parent = parent;
+        this.googleNewsController = googleNewsController;
+        googleNewsController.setIndex(index);
+        type = "gnews";
+    }
+
+
+
     public void restoreWeatherData(StoreWeather storeWeather) {
         weatherController.setCity(storeWeather.getCity());
         weatherController.setUpdateCircle(storeWeather.getUpdateCircle());
@@ -63,6 +77,11 @@ public class ParentCollectorObject {
         parent.setLayoutY(storeClock.getPos().getYd());
     }
 
+    public void restoreGNewsData(StoreGNews storeGNews) {
+        parent.setLayoutX(storeGNews.getPos().getXd());
+        parent.setLayoutY(storeGNews.getPos().getYd());
+    }
+
     public int getIndex() {
         return index;
     }
@@ -77,6 +96,10 @@ public class ParentCollectorObject {
 
     public StoreGCalendar getStoreGCalendar() {
         return new StoreGCalendar(googleCalendarController.getName(), googleCalendarController.getMaxResult(), googleCalendarController.getUpdateCicle(), new Vec2(parent.getLayoutX(), parent.getLayoutY()));
+    }
+
+    public StoreGNews getStoreGNews() {
+        return new StoreGNews(new Vec2(parent.getLayoutX(), parent.getLayoutY()));
     }
 
     public StoreClock getStoreClock() {

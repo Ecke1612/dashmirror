@@ -134,6 +134,9 @@ public class FileHandler {
                 case "clock":
                     if(!p.isDeleted()) Controller.storageObject.addStoreClockObject(p.getStoreClock());
                     break;
+                case "gnews":
+                    if(!p.isDeleted()) Controller.storageObject.addStoreGNews(p.getStoreGNews());
+                    break;
             }
         }
         FileHandler.writeObject(Controller.storageObject, "data/storage");

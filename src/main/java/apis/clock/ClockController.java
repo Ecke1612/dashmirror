@@ -19,13 +19,12 @@ public class ClockController {
     @FXML
     Label label_seconds;
 
-    private Timeline timeline;
     private Controller controller;
     private int index;
     private boolean delete = false;
 
     public ClockController() {
-        timeline = new Timeline();
+        Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
         KeyFrame frame = new KeyFrame(javafx.util.Duration.seconds(1), event -> {
             initialize();

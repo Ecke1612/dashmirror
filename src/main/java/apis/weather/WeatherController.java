@@ -40,7 +40,6 @@ public class WeatherController {
     private Weather weatherAPI;
     private String city = "London";
     private Stage settingStage;
-    private Timeline timeline;
     private int updateCircle = 15;
     private Controller mainController;
     private int index;
@@ -48,7 +47,7 @@ public class WeatherController {
 
 
     public WeatherController() {
-        timeline = new Timeline();
+        Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
         KeyFrame frame = new KeyFrame(Duration.minutes(updateCircle), event -> {
             System.out.println("Weater Updatet - index: " + index);
