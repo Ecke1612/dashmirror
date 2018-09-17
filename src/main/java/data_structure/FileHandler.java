@@ -1,5 +1,7 @@
 package data_structure;
 
+import apis.weather.WeatherController;
+import apis.weather.WeatherObject;
 import main.Controller;
 
 import java.io.*;
@@ -112,34 +114,25 @@ public class FileHandler {
         }
     }
 
+    public static void renameFile(String oldfilepath, String newfilepath) {
+        File oldfile =new File(oldfilepath);
+        File newfile =new File(newfilepath);
+
+        if(oldfile.renameTo(newfile)){
+            System.out.println("Rename succesful");
+        }else{
+            System.out.println("Rename failed");
+        }
+    }
+
     public static void createDir(String name) {
         File dir = new File(name);
         dir.mkdir();
     }
 
-    public static void saveData() {
-        System.out.println("save");
-        if(!fileExist("data")) createDir("data");
-
-        Controller.storageObject.clearStoragedData();
-
-        for(ParentCollectorObject p : Controller.parentCollectorObjects) {
-            switch(p.getType()) {
-                case "weather":
-                    if(!p.isDeleted()) Controller.storageObject.addStoreWeathersObject(p.getStoreWeather());
-                    break;
-                case "googleCalendar":
-                    if(!p.isDeleted()) Controller.storageObject.addStoreGCalendarObject(p.getStoreGCalendar());
-                    break;
-                case "clock":
-                    if(!p.isDeleted()) Controller.storageObject.addStoreClockObject(p.getStoreClock());
-                    break;
-                case "gnews":
-                    if(!p.isDeleted()) Controller.storageObject.addStoreGNews(p.getStoreGNews());
-                    break;
-            }
-        }
-        FileHandler.writeObject(Controller.storageObject, "data/storage");
+    public static File[] getFileInDir(String path) {
+        File file = new File(path);
+        return file.listFiles();
     }
 
 }

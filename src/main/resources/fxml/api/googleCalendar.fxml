@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apis.googlecalender.GoogleCalendarController">
+<VBox fx:id="main_pane" alignment="CENTER" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apis.googlecalender.GoogleCalendarController">
    <children>
       <HBox alignment="CENTER_LEFT" spacing="50.0">
          <children>

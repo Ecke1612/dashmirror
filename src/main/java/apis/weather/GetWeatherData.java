@@ -12,7 +12,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Scanner;
 
-public class Weather {
+public class GetWeatherData {
 
     private String currWeaterURL = "http://api.openweathermap.org/data/2.5/weather?q=";
     private final String key = "4e46f87c528cdc9447f329001b9d171a";
@@ -22,9 +22,9 @@ public class Weather {
     private String tempMax = "";
     private String wind = "";
 
-    public Weather(String city) {
+    public GetWeatherData(String city) {
         this.city = city;
-        checkCurrentWeather();
+        //checkCurrentWeather();
     }
 
     public boolean checkCurrentWeather() {

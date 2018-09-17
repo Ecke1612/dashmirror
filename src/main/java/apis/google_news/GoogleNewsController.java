@@ -26,6 +26,10 @@ public class GoogleNewsController {
 
     }
 
+    public void loadGNewsObject() {
+
+    }
+
     public void toarticle_1() {
 
     }
@@ -43,9 +47,7 @@ public class GoogleNewsController {
     }
 
     public void delete() {
-        controller.anchorpane.getChildren().remove(Controller.parentCollectorObjects.get(index).getParent());
-        Controller.parentCollectorObjects.get(index).setDeleted(true);
-        FileHandler.saveData();
+
     }
 
     public void setController(Controller controller) {

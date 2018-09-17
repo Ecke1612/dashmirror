@@ -1,22 +1,28 @@
 package apis.googlecalender;
 
+import apis.ParentController;
+import apis.weather.GetWeatherData;
+import apis.weather.WeatherObject;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import data_structure.FileHandler;
-import data_structure.ParentCollectorObject;
+import data_structure.OnDragDetect;
+import data_structure.Vec2;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 import main.Controller;
+import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -30,8 +36,10 @@ import java.util.*;
 
 import static javafx.scene.paint.Color.WHITE;
 
-public class GoogleCalendarController {
+public class GoogleCalendarController extends ParentController {
 
+    @FXML
+    public VBox main_pane;
     @FXML
     public VBox vbox_main;
     @FXML
@@ -42,34 +50,39 @@ public class GoogleCalendarController {
     public ScrollPane scrollpane;
 
     private GoogleCalendar gCal;
-    private String name = "Eike";
-    private int maxResult = 5;
-    private Timeline timeline;
-    private int updateCicle = 5;
-    private Parent root;
     private Controller controller;
     private int index;
+    private GCalendarObject gCalObj;
+    private String storePath = "data/store/gcal_";
+
 
     public GoogleCalendarController() {
-        timeline = new Timeline();
+        gCalObj = new GCalendarObject();
+        Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
 
-        KeyFrame frame = new KeyFrame(Duration.minutes(updateCicle), event -> {
+        KeyFrame frame = new KeyFrame(Duration.minutes(gCalObj.getUpdateCircle()), event -> {
             System.out.println("Calendar updatet - index" + index);
             System.out.println();
-            initialize();
+            update();
         });
         timeline.getKeyFrames().add(frame);
         timeline.play();
     }
 
     public void initialize() {
+        OnDragDetect onDragDetect = new OnDragDetect();
+        onDragDetect.onDrag(main_pane, this);
+        update();
+    }
+
+    public void update() {
         vbox_main.getChildren().clear();
-        label_head.setText(name + "'s Google Calender");
+        label_head.setText(gCalObj.getName() + "'s Google Calender");
         label_head_date.setText(getActualDate());
         gCal = new GoogleCalendar();
         try {
-            List<Event> items = gCal.getCalendarData(maxResult);
+            List<Event> items = gCal.getCalendarData(gCalObj.getMaxResult());
             if(items != null) {
                 System.out.println("size: " + items.size());
                 if (items.isEmpty()) {
@@ -82,7 +95,6 @@ public class GoogleCalendarController {
                             start = event.getStart().getDate();
                         }
                         System.out.printf("%s (%s)\n", event.getSummary(), start);
-                        //System.out.printf(event.getSummary(), start);
                         createDateRow(event.getSummary(), start);
                     }
                 }
@@ -97,9 +109,22 @@ public class GoogleCalendarController {
     }
 
     public void delete() {
-        controller.anchorpane.getChildren().remove(Controller.parentCollectorObjects.get(index).getParent());
-        Controller.parentCollectorObjects.get(index).setDeleted(true);
-        FileHandler.saveData();
+        System.out.println("delete");
+        controller.anchorpane.getChildren().remove(main_pane);
+        controller.gcalendarindex--;
+        FileHandler.deleteFile(storePath + index);
+    }
+
+    public void loadGCalendarObject() {
+        if(FileHandler.fileExist(storePath + index)) {
+            System.out.println("load Object");
+            gCalObj = (GCalendarObject) FileHandler.loadObjects(storePath + index);
+            main_pane.setLayoutX(gCalObj.getPos().getXd());
+            main_pane.setLayoutY(gCalObj.getPos().getYd());
+        } else {
+            main_pane.setLayoutX(gCalObj.getPos().getXd());
+            main_pane.setLayoutY(gCalObj.getPos().getYd());
+        }
     }
 
     private void createDateRow(String subject, DateTime start) {
@@ -164,6 +189,11 @@ public class GoogleCalendarController {
 
     }
 
+    public void saveData() {
+        gCalObj.setPos(new Vec2(main_pane.getLayoutX(), main_pane.getLayoutY()));
+        FileHandler.writeObject(gCalObj, storePath + index);
+    }
+
     public static LocalDateTime toLocalDateTime(Calendar calendar) {
         if (calendar == null) {
             return null;
@@ -190,39 +220,6 @@ public class GoogleCalendarController {
 
     public void openSettings() {
         System.out.println("Einstellungen");
-        FileHandler.saveData();
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setMaxResult(int maxResult) {
-        this.maxResult = maxResult;
-    }
-
-    public void setUpdateCicle(int updateCicle) {
-        this.updateCicle = updateCicle;
-    }
-
-    public Parent getRoot() {
-        return root;
-    }
-
-    public void setRoot(Parent root) {
-        this.root = root;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getMaxResult() {
-        return maxResult;
-    }
-
-    public int getUpdateCicle() {
-        return updateCicle;
     }
 
     public void setController(Controller controller) {
@@ -232,4 +229,5 @@ public class GoogleCalendarController {
     public void setIndex(int index) {
         this.index = index;
     }
+
 }

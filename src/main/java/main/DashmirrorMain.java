@@ -24,7 +24,7 @@ public class DashmirrorMain extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
         primaryStage.setTitle(appName + " - build " + externalBuilt);
         primaryStage.setScene(new Scene(root, WIDTH, HEIGHT));
-        primaryStage.setFullScreen(true);
+        //primaryStage.setFullScreen(true);
         DashmirrorMain.primaryStage = primaryStage;
         primaryStage.show();
 
@@ -32,7 +32,6 @@ public class DashmirrorMain extends Application {
             @Override
             public void handle(WindowEvent event) {
                 System.out.println("Auf Wiedersehen");
-                FileHandler.saveData();
             }
         });
     }

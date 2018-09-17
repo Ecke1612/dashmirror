@@ -1,15 +1,15 @@
 package apis.weather;
 
+import apis.ParentController;
 import data_structure.FileHandler;
+import data_structure.OnDragDetect;
 import data_structure.Vec2;
-import data_structure.storage.StoreWeather;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import main.Controller;
 
-public class WeatherController {
+public class WeatherController extends ParentController {
 
     @FXML
     VBox main_pane;
@@ -37,36 +37,56 @@ public class WeatherController {
     @FXML
     Label label_wind_inwords;
 
-    private Weather weatherAPI;
-    private String city = "London";
-    private Stage settingStage;
-    private int updateCircle = 15;
-    private Controller mainController;
+    private GetWeatherData getWeatherDataAPI;
     private int index;
-    private boolean delete = false;
+    private WeatherObject weatherObject = new WeatherObject();
+    private Stage settingStage;
+    private Controller controller;
+    private String storePath = "data/store/weather_";
 
 
     public WeatherController() {
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
-        KeyFrame frame = new KeyFrame(Duration.minutes(updateCircle), event -> {
-            System.out.println("Weater Updatet - index: " + index);
+        KeyFrame frame = new KeyFrame(Duration.seconds(weatherObject.getUpdateCircle()), event -> {
+            System.out.println("Weather Updatet - index: " + index);
             System.out.println();
-            initialize();
+            update();
         });
         timeline.getKeyFrames().add(frame);
         timeline.play();
+
+    }
+
+    public void loadWeatherObject() {
+        if(FileHandler.fileExist(storePath + index)) {
+            System.out.println("load Object");
+            weatherObject = (WeatherObject) FileHandler.loadObjects(storePath + index);
+            main_pane.setLayoutX(weatherObject.getPos().getXd());
+            main_pane.setLayoutY(weatherObject.getPos().getYd());
+            getWeatherDataAPI = new GetWeatherData(weatherObject.getCity());
+            update();
+        } else {
+            getWeatherDataAPI = new GetWeatherData(weatherObject.getCity());
+            main_pane.setLayoutX(weatherObject.getPos().getXd());
+            main_pane.setLayoutY(weatherObject.getPos().getYd());
+            update();
+        }
     }
 
     public void initialize() {
-        weatherAPI = new Weather(city);
-        if(weatherAPI.checkCurrentWeather()) {
-            label_city.setText(city);
-            label_temp.setText(weatherAPI.getTemperature());
-            label_temp_min.setText("min " + weatherAPI.getTempMin());
-            label_temp_max.setText("max " + weatherAPI.getTempMax());
-            label_wind.setText(weatherAPI.getWind() + " kmH");
-            label_wind_inwords.setText(weatherAPI.getWindInWords());
+        OnDragDetect onDragDetect = new OnDragDetect();
+        onDragDetect.onDrag(main_pane, this);
+    }
+
+    public void update() {
+        if(getWeatherDataAPI.checkCurrentWeather()) {
+            label_city.setText(weatherObject.getCity());
+            label_temp.setText(getWeatherDataAPI.getTemperature());
+            label_temp_min.setText("min " + getWeatherDataAPI.getTempMin());
+            label_temp_max.setText("max " + getWeatherDataAPI.getTempMax());
+            label_wind.setText(getWeatherDataAPI.getWind() + " kmH");
+            label_wind_inwords.setText(getWeatherDataAPI.getWindInWords());
         }else {
             System.out.println("City not found");
         }
@@ -74,9 +94,9 @@ public class WeatherController {
 
     public void delete() {
         System.out.println("delete");
-        mainController.anchorpane.getChildren().remove(Controller.parentCollectorObjects.get(index).getParent());
-        Controller.parentCollectorObjects.get(index).setDeleted(true);
-        FileHandler.saveData();
+        controller.anchorpane.getChildren().remove(main_pane);
+        controller.weatherindex--;
+        FileHandler.deleteFile(storePath + index);
     }
 
     public void settings() {
@@ -86,7 +106,7 @@ public class WeatherController {
         settingStage.setScene(scene);
 
         Label name_label = new Label("Stadt Eingeben: ");
-        final TextField city_textField = new TextField(city);
+        final TextField city_textField = new TextField(weatherObject.getCity());
         Button btn_okay = new Button("Okay");
         Button btn_abort = new Button("Abbrechen");
 
@@ -107,49 +127,29 @@ public class WeatherController {
 
         btn_okay.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-              city = city_textField.getText();
-              initialize();
-              FileHandler.saveData();
-              settingStage.close();
+                weatherObject.setCity(city_textField.getText());
+                //FileHandler.saveData();
+                getWeatherDataAPI = new GetWeatherData(weatherObject.getCity());
+                saveData();
+                update();
+                settingStage.close();
             }
         });
 
         settingStage.showAndWait();
     }
 
-    public String getCity() {
-        return city;
+    @Override
+    public void saveData() {
+        weatherObject.setPos(new Vec2(main_pane.getLayoutX(), main_pane.getLayoutY()));
+        FileHandler.writeObject(weatherObject, storePath + index);
     }
 
-    public int getUpdateCircle() {
-        return updateCircle;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public void setUpdateCircle(int updateCircle) {
-        this.updateCircle = updateCircle;
-    }
-
-    public void setMainController(Controller mainController) {
-        this.mainController = mainController;
-    }
-
-    public int getIndex() {
-        return index;
+    public void setController(Controller Controller) {
+        this.controller = Controller;
     }
 
     public void setIndex(int index) {
         this.index = index;
-    }
-
-    public boolean isDelete() {
-        return delete;
-    }
-
-    public void setDelete(boolean delete) {
-        this.delete = delete;
     }
 }
