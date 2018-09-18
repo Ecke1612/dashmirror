@@ -38,7 +38,7 @@ public class GoogleNews {
                 while(sc.hasNext()){
                     inline +=sc.nextLine();
                 }
-                System.out.println(inline);
+                //System.out.println(inline);
                 sc.close();
             }
 

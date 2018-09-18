@@ -93,7 +93,7 @@ public class GoogleCalendarController extends ParentController {
                         if (start == null) {
                             start = event.getStart().getDate();
                         }
-                        System.out.printf("%s (%s)\n", event.getSummary(), start);
+                        //System.out.printf("%s (%s)\n", event.getSummary(), start);
                         createDateRow(event.getSummary(), start);
                     }
                 }
