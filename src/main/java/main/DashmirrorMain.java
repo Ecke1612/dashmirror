@@ -13,7 +13,7 @@ public class DashmirrorMain extends Application {
 
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
-    private int build = 119;
+    private int build = 120;
     private double externalBuilt = (double)build / 1000;
     private String appName = "Dashmirror";
     public static Stage primaryStage;
