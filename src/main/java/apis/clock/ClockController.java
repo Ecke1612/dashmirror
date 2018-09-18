@@ -6,11 +6,8 @@ import data_structure.OnDragDetect;
 import data_structure.Vec2;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import main.Controller;
 
@@ -71,6 +68,7 @@ public class ClockController extends ParentController {
             main_pane.setLayoutX(clockObject.getPos().getXd());
             main_pane.setLayoutY(clockObject.getPos().getYd());
         }
+        saveData();
     }
 
 

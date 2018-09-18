@@ -22,8 +22,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 import main.Controller;
-import org.json.simple.JSONObject;
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.text.DateFormat;
@@ -73,6 +71,7 @@ public class GoogleCalendarController extends ParentController {
     public void initialize() {
         OnDragDetect onDragDetect = new OnDragDetect();
         onDragDetect.onDrag(main_pane, this);
+
         update();
     }
 
@@ -125,6 +124,7 @@ public class GoogleCalendarController extends ParentController {
             main_pane.setLayoutX(gCalObj.getPos().getXd());
             main_pane.setLayoutY(gCalObj.getPos().getYd());
         }
+        saveData();
     }
 
     private void createDateRow(String subject, DateTime start) {
@@ -160,10 +160,10 @@ public class GoogleCalendarController extends ParentController {
                     + " - " + timeRange.getHour() + ":" + optZeroM + timeRange.getMinute());
         }
 
-        styeLabel(label_date,true,15);
-        styeLabel(label_weekday, false,12);
-        styeLabel(label_subject,true,15);
-        styeLabel(label_timeRange,false,12);
+        styeLabel(label_date,true,18);
+        styeLabel(label_weekday, false,14);
+        styeLabel(label_subject,true,18);
+        styeLabel(label_timeRange,false,14);
 
         vbox_date.getChildren().addAll(label_date,label_weekday);
         vbox_subject.getChildren().addAll(label_subject, label_timeRange);

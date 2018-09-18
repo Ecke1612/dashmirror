@@ -1,6 +1,6 @@
 package apis.google_news;
 
-public class NewsObject {
+public class NewsDataObject {
 
     private String source;
     private String title;
@@ -9,7 +9,7 @@ public class NewsObject {
     private String urlToImage;
     private String content;
 
-    public NewsObject(String source, String title, String description, String url, String urlToImage, String content) {
+    public NewsDataObject(String source, String title, String description, String url, String urlToImage, String content) {
         this.source = source;
         this.title = title;
         this.description = description;

@@ -1,6 +1,5 @@
 package apis.google_news;
 
-import netscape.javascript.JSObject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,9 +19,9 @@ public class GoogleNews {
     private String apiurl = "https://newsapi.org/v2/top-headlines?";
     private String country = "country=de&";
 
-    private ArrayList<NewsObject> newsObjects = new ArrayList<>();
+    private ArrayList<NewsDataObject> newsDataObjects = new ArrayList<>();
 
-    public ArrayList<NewsObject> getNews() {
+    public ArrayList<NewsDataObject> getNews() {
         URL url = null;
         try {
             url = new URL(apiurl + country + "apiKey=" + key);
@@ -77,10 +76,10 @@ public class GoogleNews {
                 if(testfornull(articleObj.get("content"))) {
                     content = articleObj.get("content").toString();
                 }
-                newsObjects.add(new NewsObject(source, title, description, urltoarticle, urlToImage, content));
+                newsDataObjects.add(new NewsDataObject(source, title, description, urltoarticle, urlToImage, content));
             }
             con.disconnect();
-            return newsObjects;
+            return newsDataObjects;
 
         } catch (MalformedURLException e) {
             e.printStackTrace();

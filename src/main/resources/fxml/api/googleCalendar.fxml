@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="main_pane" alignment="CENTER" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apis.googlecalender.GoogleCalendarController">
+<VBox fx:id="main_pane" alignment="CENTER" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apis.googlecalender.GoogleCalendarController">
    <children>
-      <HBox alignment="CENTER_LEFT" spacing="50.0">
+      <HBox alignment="CENTER_LEFT" spacing="50.0" style="-fx-background-color: transparent;">
          <children>
             <Button fx:id="btn_settings" maxHeight="22.0" maxWidth="22.0" minHeight="22.0" minWidth="22.0" mnemonicParsing="false" onAction="#openSettings" prefHeight="22.0" prefWidth="22.0" style="-fx-background-color: transparent;">
                <graphic>
@@ -39,7 +39,7 @@
             </Button>
          </children>
       </HBox>
-      <VBox alignment="TOP_CENTER">
+      <VBox alignment="TOP_CENTER" style="-fx-background-color: transparent;">
          <children>
             <Label fx:id="label_head_date" text="Do. 13.09.2018" textFill="WHITE">
                <font>
@@ -49,9 +49,9 @@
          </children>
       </VBox>
       <Separator prefWidth="200.0" style="-fx-background-color: #EEEEEE;" />
-      <ScrollPane fx:id="scrollpane" prefViewportHeight="300.0" prefViewportWidth="220.0" style="-fx-background: #000000; -fx-border-color: #000000;">
+      <ScrollPane fx:id="scrollpane" prefViewportHeight="300.0" prefViewportWidth="220.0" stylesheets="@../../img/gui/css/main_css.css">
          <content>
-            <VBox fx:id="vbox_main" spacing="10.0" />
+            <VBox fx:id="vbox_main" spacing="10.0" style="-fx-background-color: transparent;" />
          </content>
       </ScrollPane>
    </children>

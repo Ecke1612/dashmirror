@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="main_pane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apis.clock.ClockController">
+<VBox fx:id="main_pane" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apis.clock.ClockController">
    <children>
-      <BorderPane style="-fx-background-color: #000000;">
+      <BorderPane style="-fx-background-color: transparent;">
          <right>
             <Button fx:id="btn_delete" mnemonicParsing="false" onAction="#delete" style="-fx-background-color: transparent;" text="X" textFill="#d3d3d3" BorderPane.alignment="CENTER">
                <font>
@@ -38,7 +38,7 @@
             <Insets left="3.0" />
          </padding>
       </BorderPane>
-      <HBox fx:id="main_hbox" style="-fx-background-color: #000000;">
+      <HBox fx:id="main_hbox" style="-fx-background-color: transparent;">
          <children>
             <Label fx:id="label_hours" text="15" textFill="WHITE">
                <font>

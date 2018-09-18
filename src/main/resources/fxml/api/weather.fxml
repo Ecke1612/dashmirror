@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="main_pane" alignment="TOP_CENTER" style="-fx-background-color: #000000;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apis.weather.WeatherController">
+<VBox fx:id="main_pane" alignment="TOP_CENTER" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="apis.weather.WeatherController">
    <children>
       <BorderPane>
          <left>
@@ -47,10 +47,7 @@
       </HBox>
       <HBox>
          <children>
-            <ImageView fitHeight="112.5" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../img/weather/Weather+Targeting.png" />
-               </image>
+            <ImageView fx:id="icon" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                <HBox.margin>
                   <Insets bottom="-15.0" right="-5.0" top="-15.0" />
                </HBox.margin>
@@ -65,17 +62,6 @@
                         <Insets top="-15.0" />
                      </VBox.margin>
                   </Label>
-                  <Label fx:id="label_temp_min" text="min 18" textFill="WHITE">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="label_temp_max" text="max 28" textFill="WHITE">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <HBox />
                </children>
             </VBox>
          </children>

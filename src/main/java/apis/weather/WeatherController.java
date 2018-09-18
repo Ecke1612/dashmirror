@@ -14,6 +14,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -27,15 +29,13 @@ public class WeatherController extends ParentController {
     @FXML
     Label label_temp;
     @FXML
-    Label label_temp_min;
-    @FXML
-    Label label_temp_max;
-    @FXML
     Label label_city;
     @FXML
     Label label_wind;
     @FXML
     Label label_wind_inwords;
+    @FXML
+    ImageView icon;
 
     private GetWeatherData getWeatherDataAPI;
     private int index;
@@ -48,7 +48,7 @@ public class WeatherController extends ParentController {
     public WeatherController() {
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
-        KeyFrame frame = new KeyFrame(Duration.seconds(weatherObject.getUpdateCircle()), event -> {
+        KeyFrame frame = new KeyFrame(Duration.minutes(weatherObject.getUpdateCircle()), event -> {
             System.out.println("Weather Updatet - index: " + index);
             System.out.println();
             update();
@@ -65,13 +65,13 @@ public class WeatherController extends ParentController {
             main_pane.setLayoutX(weatherObject.getPos().getXd());
             main_pane.setLayoutY(weatherObject.getPos().getYd());
             getWeatherDataAPI = new GetWeatherData(weatherObject.getCity());
-            update();
         } else {
             getWeatherDataAPI = new GetWeatherData(weatherObject.getCity());
             main_pane.setLayoutX(weatherObject.getPos().getXd());
             main_pane.setLayoutY(weatherObject.getPos().getYd());
-            update();
         }
+        update();
+        saveData();
     }
 
     public void initialize() {
@@ -80,13 +80,13 @@ public class WeatherController extends ParentController {
     }
 
     public void update() {
-        if(getWeatherDataAPI.checkCurrentWeather()) {
+        if(getWeatherDataAPI.checkCurrentWeather("weather")) {
             label_city.setText(weatherObject.getCity());
-            label_temp.setText(getWeatherDataAPI.getTemperature());
-            label_temp_min.setText("min " + getWeatherDataAPI.getTempMin());
-            label_temp_max.setText("max " + getWeatherDataAPI.getTempMax());
-            label_wind.setText(getWeatherDataAPI.getWind() + " kmH");
+            label_temp.setText(getWeatherDataAPI.getCurrTemperature());
+            label_wind.setText(getWeatherDataAPI.getCurrWind() + " kmH");
             label_wind_inwords.setText(getWeatherDataAPI.getWindInWords());
+            Image image = new Image(this.getClass().getResourceAsStream("/img/weather/" + getWeatherDataAPI.getIcon() + ".png"));
+            icon.setImage(image);
         }else {
             System.out.println("City not found");
         }
@@ -128,7 +128,6 @@ public class WeatherController extends ParentController {
         btn_okay.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 weatherObject.setCity(city_textField.getText());
-                //FileHandler.saveData();
                 getWeatherDataAPI = new GetWeatherData(weatherObject.getCity());
                 saveData();
                 update();

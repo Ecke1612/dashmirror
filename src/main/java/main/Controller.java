@@ -70,7 +70,7 @@ public class Controller {
                         addWidget("clock", "/fxml/api/clock.fxml", true, f.getName());
                         break;
                     case "gnews":
-                        addWidget("news", "/fxml/api/googleNews.fxml", true, f.getName());
+                        addWidget("gnews", "/fxml/api/googleNews.fxml", true, f.getName());
                 }
             }
         }
@@ -122,7 +122,11 @@ public class Controller {
     }
 
     public void fullscreen() {
-        DashmirrorMain.primaryStage.setFullScreen(true);
+        if(DashmirrorMain.primaryStage.isFullScreen()) {
+            DashmirrorMain.primaryStage.setFullScreen(false);
+        }else{
+            DashmirrorMain.primaryStage.setFullScreen(true);
+        }
     }
 
     private Parent positioning(Parent root) {

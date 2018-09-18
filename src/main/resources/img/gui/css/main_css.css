@@ -1,0 +1,40 @@
+.scroll-pane{
+    -fx-background-color:transparent;
+}
+.scroll-pane > .viewport {
+-fx-background-color: transparent;
+}
+
+.titled-pane{
+    -fx-background-color:transparent;
+    -fx-border-color: white;
+    -fx-border-radius: 5 5 5 5;
+}
+.titled-pane > .title{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-pref-height: 65;
+}
+.titled-pane > *.content {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.text-area{
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+}
+.text-area .content{
+    -fx-background-color: transparent;
+}
+.text-area .scroll-pane{
+    -fx-border-color: transparent;
+}
+.text-area .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.button{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}

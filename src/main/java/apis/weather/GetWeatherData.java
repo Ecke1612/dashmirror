@@ -1,5 +1,6 @@
 package apis.weather;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -14,24 +15,25 @@ import java.util.Scanner;
 
 public class GetWeatherData {
 
-    private String currWeaterURL = "http://api.openweathermap.org/data/2.5/weather?q=";
+    private String currWeaterURL = "http://api.openweathermap.org/data/2.5/";
     private final String key = "4e46f87c528cdc9447f329001b9d171a";
+    private String currWeather = "weather";
+    private String forcastWeather = "forcast";
     private String city;
-    private String temperature = "";
-    private String tempMin = "";
-    private String tempMax = "";
-    private String wind = "";
+    private String currTemperature = "";
+    private String currWind = "";
+    private String icon = "";
 
     public GetWeatherData(String city) {
         this.city = city;
         //checkCurrentWeather();
     }
 
-    public boolean checkCurrentWeather() {
+    public boolean checkCurrentWeather(String lookfor) {
         boolean dataArrived = false;
         URL url = null;
         try {
-            url = new URL(currWeaterURL + city + "&appid=" + key + "&units=metric");
+            url = new URL( currWeaterURL + lookfor + "?q=" + city + "&appid=" + key + "&units=metric");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
 
@@ -49,20 +51,10 @@ public class GetWeatherData {
                 sc.close();
                 dataArrived = true;
             }
-
-            JSONParser parser = new JSONParser();
-
-            JSONObject jobj = (JSONObject)parser.parse(inline);
-            JSONObject mainObj = (JSONObject) jobj.get("main");
-            JSONObject windObj = (JSONObject) jobj.get("wind");
-
-            temperature = mainObj.get("temp").toString();
-            tempMin = mainObj.get("temp_min").toString();
-            tempMax = mainObj.get("temp_max").toString();
-            wind = windObj.get("speed").toString();
-
-
             con.disconnect();
+
+            if(lookfor.equals(currWeather)) analyseCurrWeatherData(inline);
+            else if(lookfor.equals(forcastWeather)) analyseForcastData(inline);
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -70,36 +62,66 @@ public class GetWeatherData {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
         return dataArrived;
     }
 
-    public String getTemperature() {
-        String[] split = temperature.split("\\.");
+    private void analyseCurrWeatherData(String inline) {
+        JSONParser parser = new JSONParser();
+
+        JSONObject jobj = null;
+        try {
+            jobj = (JSONObject)parser.parse(inline);
+            JSONObject mainObj = (JSONObject) jobj.get("main");
+            JSONArray weatherArray = (JSONArray) jobj.get("weather");
+            JSONObject weatherObj = (JSONObject) weatherArray.get(0);
+            JSONObject windObj = (JSONObject) jobj.get("wind");
+
+            currTemperature = mainObj.get("temp").toString();
+            currWind = windObj.get("speed").toString();
+            System.out.println("icon: " + icon);
+            icon = weatherObj.get("icon").toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void analyseForcastData(String inline) {
+        /*
+        JSONParser parser = new JSONParser();
+        JSONObject jobj = null;
+        try {
+            jobj = (JSONObject)parser.parse(inline);
+            JSONObject mainObj = (JSONObject) jobj.get("main");
+            JSONArray weatherArray = (JSONArray) jobj.get("weather");
+            JSONObject weatherObj = (JSONObject) weatherArray.get(0);
+            JSONObject windObj = (JSONObject) jobj.get("currWind");
+
+            currTemperature = mainObj.get("temp").toString();
+            tempMin = mainObj.get("temp_min").toString();
+            tempMax = mainObj.get("temp_max").toString();
+            currWind = windObj.get("speed").toString();
+            icon = weatherObj.get("icon").toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    */}
+
+    public String getCurrTemperature() {
+        String[] split = currTemperature.split("\\.");
         return split[0] + "°C";
     }
 
-    public String getTempMin() {
-        String[] split = tempMin.split("\\.");
-        return split[0] + "°C";
-    }
-
-    public String getTempMax() {
-        String[] split = tempMax.split("\\.");
-        return split[0] + "°C";
-    }
-
-    public String getWind() {
-        double dwind = Double.parseDouble(wind);
+    public String getCurrWind() {
+        double dwind = Double.parseDouble(currWind);
         dwind = dwind * 3.6;
         return roundDoubleToString(dwind);
     }
 
     public String getWindInWords() {
         String sentence = "nicht erfasst";
-        double w = Double.parseDouble(wind);
+        double w = Double.parseDouble(currWind);
         if(w < 0.2) {
             sentence = "Stille";
         }else if(w >= 0.2 && w < 5.5) {
@@ -121,5 +143,9 @@ public class GetWeatherData {
     private String roundDoubleToString(double value) {
         DecimalFormat df = new DecimalFormat("####0.00");
         return df.format(value);
+    }
+
+    public String getIcon() {
+        return icon;
     }
 }
