@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="GCalendarapi_External">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../_ExternalLib/GCalendarapi_External.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../_ExternalLib/GCalendarapi_External.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -25,7 +25,7 @@ import java.util.List;
 
 public class GoogleCalendar {
 
-    private static final String APPLICATION_NAME = "Dashmirror";
+    private static final String APPLICATION_NAME = "test";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
@@ -65,9 +65,6 @@ public class GoogleCalendar {
                 .setSingleEvents(true)
                 .execute();
         List<Event> items = events.getItems();
-
-
-
         return items;
     }
 }

@@ -1,21 +1,17 @@
 package apis.googlecalender;
 
 import apis.ParentController;
-import apis.weather.GetWeatherData;
-import apis.weather.WeatherObject;
 import com.google.api.client.util.DateTime;
 import com.google.api.services.calendar.model.Event;
 import data_structure.FileHandler;
 import data_structure.OnDragDetect;
+import data_structure.Processer;
 import data_structure.Vec2;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -32,6 +28,10 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import main.GCalDataObject;
+import main.Google;
+import main.Store;
+
 import static javafx.scene.paint.Color.WHITE;
 
 public class GoogleCalendarController extends ParentController {
@@ -47,7 +47,6 @@ public class GoogleCalendarController extends ParentController {
     @FXML
     public ScrollPane scrollpane;
 
-    private GoogleCalendar gCal;
     private Controller controller;
     private int index;
     private GCalendarObject gCalObj;
@@ -71,15 +70,14 @@ public class GoogleCalendarController extends ParentController {
     public void initialize() {
         OnDragDetect onDragDetect = new OnDragDetect();
         onDragDetect.onDrag(main_pane, this);
-
         update();
     }
 
-    public void update() {
+    private void update() {
         vbox_main.getChildren().clear();
         label_head.setText(gCalObj.getName() + "'s Google Calender");
         label_head_date.setText(getActualDate());
-        gCal = new GoogleCalendar();
+        /*GoogleCalendar gCal = new GoogleCalendar();
         try {
             List<Event> items = gCal.getCalendarData(gCalObj.getMaxResult());
             if(items != null) {
@@ -104,7 +102,20 @@ public class GoogleCalendarController extends ParentController {
             e.printStackTrace();
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
+        }*/
+        Processer processer = new Processer();
+        try {
+            processer.startJar("src/main/java/apis/googlecalender/GCalendarapi_External.jar", "windwos");
+            Store gCalStore = (Store) FileHandler.loadObjects("gCalData");
+            for(GCalDataObject g : gCalStore.getgCalDataObjects()) {
+                createDateRow(g);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 
     public void delete() {
@@ -127,20 +138,61 @@ public class GoogleCalendarController extends ParentController {
         saveData();
     }
 
+    private void createDateRow(GCalDataObject g) {
+        System.out.println("called");
+        HBox hbox = new HBox(10);
+        VBox vbox_date = new VBox();
+        VBox vbox_subject = new VBox();
+
+        LocalDateTime date = g.getDate();
+        LocalTime range = g.getRange();
+
+        Label label_date = new Label(String.valueOf(date.getDayOfMonth()));
+        Label label_weekday = new Label((date.getDayOfWeek().toString().substring(0,3)));
+        Label label_subject = new Label(g.getSummery());
+
+        Label label_timeRange;
+        if(range == null) {
+            String optZeroM = "";
+            String optZeroH = "";
+            if(date.getMinute() < 10) optZeroM = "0";
+            if(date.getHour() < 10) optZeroH = "0";
+            label_timeRange = new Label(optZeroH + String.valueOf(date.getHour()) + ":" + optZeroM + String.valueOf(date.getMinute()));
+        } else {
+            int rangeInMinutes = (range.getHour() * 60) + range.getMinute();
+            LocalTime timeRange = date.toLocalTime().plus(rangeInMinutes, ChronoUnit.MINUTES);
+
+            String optZeroM = "";
+            String optZeroH = "";
+            if(date.getHour() < 10) optZeroH = "0";
+            if (date.getMinute() < 10) optZeroM = "0";
+            label_timeRange = new Label(optZeroH + String.valueOf(date.getHour()) + ":" + optZeroM + String.valueOf(date.getMinute())
+                    + " - " + timeRange.getHour() + ":" + optZeroM + timeRange.getMinute());
+        }
+
+        styeLabel(label_date,true,18);
+        styeLabel(label_weekday, false,14);
+        styeLabel(label_subject,true,18);
+        styeLabel(label_timeRange,false,14);
+
+        vbox_date.getChildren().addAll(label_date,label_weekday);
+        vbox_subject.getChildren().addAll(label_subject, label_timeRange);
+        hbox.getChildren().addAll(vbox_date, vbox_subject);
+        vbox_main.getChildren().add(hbox);
+    }
+/*
     private void createDateRow(String subject, DateTime start) {
         HBox hbox = new HBox(10);
         VBox vbox_date = new VBox();
         VBox vbox_subject = new VBox();
 
         LocalDateTime date = convertDateTime(start);
-
-        getTimeRange(start);
+        LocalTime range = getTimeRange(start);
 
         Label label_date = new Label(String.valueOf(date.getDayOfMonth()));
         Label label_weekday = new Label((date.getDayOfWeek().toString().substring(0,3)));
         Label label_subject = new Label(subject);
 
-        LocalTime range = getTimeRange(start);
         Label label_timeRange;
         if(range == null) {
             String optZeroM = "";
@@ -170,7 +222,7 @@ public class GoogleCalendarController extends ParentController {
         hbox.getChildren().addAll(vbox_date, vbox_subject);
         vbox_main.getChildren().add(hbox);
     }
-
+*/
     private LocalDateTime convertDateTime(DateTime gDate) {
         Calendar cal = GregorianCalendar.getInstance();
         cal.setTimeInMillis(gDate.getValue());
@@ -186,7 +238,6 @@ public class GoogleCalendarController extends ParentController {
         } catch (Exception e) {
             return null;
         }
-
     }
 
     public void saveData() {
